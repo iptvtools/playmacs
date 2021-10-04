@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>PlayToken</title>
+</head>
+<body>
+  
+  <script>
+  try{
+	var portal = "http://panel.globesrv.com:80";
+	var MAC = "00:1a:79:73:35:bc"; /*00:1A:79:40:75:83, 00:1A:79:40:42:CD*/
+	
+	var MAC_encode = encodeURIComponent(MAC)
+	//document.write("</br>MAC_encode: ");
+	//document.write(MAC_encode);	
+
+	var token_url = '/portal.php?type=stb&action=handshake&token=';
+	var profile_url = '/portal.php?type=stb&action=get_profile&JsHttpRequest=1-xml';	
+	var list_ur = '/portal.php?action=get_ordered_list&type=itv&p=1&JsHttpRequest=1-xml'; 
+	
+	
+	//**********************
+	//TOKEN
+	//**********************
+	document.write("*****TOKEN*****</br>");
+	var url = portal + token_url;	
+	//var url = "https://marca.com/";
+	
+	document.write(url);
+	document.write("</br>");  
+
+    var xmlHttp = new XMLHttpRequest();
+	document.write("</br>1:");
+	
+    xmlHttp.open("GET", url); // false for synchronous request
+	document.write("</br>2:");
+	
+	
+	var hd_cookie = "mac=" + MAC_encode;
+	var hd_servidorC = portal + "/c/";
+	
+	
+	//xmlHttp.setRequestHeader("User-Agent","Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG200 stbapp ver: 2 rev: 250 Safari/533.3");
+	//xmlHttp.setRequestHeader("Referer",hd_servidorC);
+	//xmlHttp.setRequestHeader("Cookie",hd_cookie);
+	//xmlHttp.setRequestHeader("stb_lang","en");
+	//xmlHttp.setRequestHeader("timezone","Europe%2FMadrid");
+	//xmlHttp.setRequestHeader("adid","91b4a5f6dfb347d871ac2b624696917f");
+	//xmlHttp.setRequestHeader("Pragma","no-cache");
+	//xmlHttp.setRequestHeader("Accept","*/*");
+	//xmlHttp.setRequestHeader("Connection","keep-alive");
+	//xmlHttp.setRequestHeader("Accept-Charset","UTF-8,*;q=0.8");
+	//xmlHttp.setRequestHeader("X-User-Agent","Model: MAG254; Link: Ethernet,WiFi");
+	//xmlHttp.setRequestHeader("Accept-Encoding","gzip, deflate");
+	//xmlHttp.setRequestHeader("Accept-Language","en-US,*");
+	//xmlHttp.setRequestHeader("","");
+
+	document.write("</br>3:");
+	
+	xmlHttp.responseType = "json";
+	document.write("</br>4:");
+	
+	xmlHttp.send(null);
+	document.write("</br>5:");
+	document.write("</br>response: ");
+    document.write(xmlHttp.response);	
+	document.write("</br>status: ");
+	document.write(xmlHttp.status);
+	document.write("</br>responseBody: ");
+    document.write(xmlHttp.responseBody);
+	document.write("</br>responseText: ");
+    document.write(xmlHttp.responseText);
+	var obj = JSON.parse(xmlHttp.responseText);
+	var token = obj['js']['token'];
+	document.write("</br>TokenJSON: ");
+	document.write(token);
+	//document.write("</br>responseXML: ");
+    //document.write(xmlHttp.responseXML);
+	//document.write("</br>status: ");
+    //document.write(xmlHttp.status);	
+	//document.write("</br>statusText: ");
+    //document.write(xmlHttp.statusText);
+	
+	//var cadena = xmlHttp.responseText;
+	//document.write("</br>cadena: ");
+    //document.write(cadena);	
+	//var token = cadena.substr(16,32);
+	//document.write("</br>token: ");
+	//document.write(token);
+		
+	xmlHttp.abort()
+	document.write("</br>FIN TOKEN");
+	
+
+	//**********************
+	//PROFILE
+	//**********************
+	document.write("</br></br>*****PROFILE*****</br>");
+	var url = portal + profile_url;
+	document.write(url);
+	document.write("</br>");  	
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", url, false); // false for synchronous request
+	var autho = '"Bearer ' + token + '"';
+	//document.write("</br>autho: ");
+	//document.write(autho);
+	var cookie = '"mac=' + MAC_encode + '; stb_lang=en; timezone=Europe%2FAmsterdam"';
+	//document.write("</br>cookie: ");
+	//document.write(cookie);	
+	xmlHttp.setRequestHeader("User-Agent","Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG200 stbapp ver: 2 rev: 250 Safari/533.3");
+	xmlHttp.setRequestHeader("Authorization",autho);
+	xmlHttp.setRequestHeader("Cookie",cookie);
+	xmlHttp.send( null );
+	document.write("</br>status: ");
+	document.write(xmlHttp.status);
+	//document.write("</br>responseText: ");
+    //document.write(xmlHttp.responseText);
+	
+	var obj = JSON.parse(xmlHttp.responseText);
+	var password = obj['js']['password'];
+	document.write("</br>PasswordJSON: ");
+	document.write(password);	
+	//document.write("</br>cadena: ");
+    //document.write(cadena);	
+	//var token = cadena.substr(16,32);
+	//document.write("</br>token: ");
+	//document.write(token);
+		
+	xmlHttp.abort()
+	document.write("</br>FIN PROFILE");
+
+
+	//**********************
+	//LIST
+	//**********************
+	document.write("</br></br>*****LIST*****</br>");
+	var url = portal + list_ur;
+	document.write(url);
+	document.write("</br>");  	
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", url, false); // false for synchronous request
+	var autho = '"Bearer ' + token + '"';
+	document.write("</br>autho: ");
+	document.write(autho);
+	
+	var cookie = '"mac=' + MAC_encode + '; stb_lang=en; timezone=Europe%2FAmsterdam"';
+	document.write("</br>cookie: ");
+	document.write(cookie);	
+	xmlHttp.setRequestHeader("User-Agent","Mozilla/5.0 (QtEmbedded; U; Linux; C) AppleWebKit/533.3 (KHTML, like Gecko) MAG200 stbapp ver: 2 rev: 250 Safari/533.3");
+	xmlHttp.setRequestHeader("Authorization",autho);
+	xmlHttp.setRequestHeader("Cookie",cookie);
+	xmlHttp.send( null );
+	document.write("</br>status: ");
+	document.write(xmlHttp.status);
+	document.write("</br>responseText: ");
+    document.write(xmlHttp.responseText);
+	
+	var cadena = xmlHttp.responseText;
+	//document.write("</br>cadena: ");
+    //document.write(cadena);	
+	//var token = cadena.substr(16,32);
+	//document.write("</br>token: ");
+	//document.write(token);
+		
+	xmlHttp.abort()
+	document.write("</br>FIN Profile");
+  }catch(err){
+	document.write("</br></br>error catch:</br>" + err);
+  }
+
+  </script>
+</body>
+</html>
